@@ -1,4 +1,6 @@
 import React from 'react';
+import { Provider } from 'mobx-react'
+import { MoonsiteStore } from './src/store/MoonsiteStore'
 import {
   StyleSheet,
   View,
