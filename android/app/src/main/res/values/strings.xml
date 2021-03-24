@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">moonsite</string>
+    <string name="facebook_app_id">286939832996107</string>
+    '<!--' 
+    <string name="fb_login_protocol_scheme">fb[APP_ID]</string>
+    * '-->'
+</resources>
