@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, Image } from 'react-native'
-import { LoginButton, AccessToken } from 'react-native-fbsdk';
-import { MoonsiteStore } from '../store/MoonsiteStore'
+import { Text, View, StyleSheet, Image, Button, TouchableOpacity } from 'react-native'
+import { LoginButton, AccessToken, LoginManager } from 'react-native-fbsdk';
+import MoonsiteStore from '../store/MoonsiteStore'
 import { observer, inject } from 'mobx-react'
 import AsyncStorage from '@react-native-community/async-storage';
 import { create } from 'mobx-persist';
+
 // const hydrate = create({
 //   storage: AsyncStorage,
 // });
@@ -24,6 +25,7 @@ export default class Login extends Component {
     super(props);
     this.state = { userInfo: null, };
   }
+
   initUser = (token) => {
     console.log(token, 'token')
     fetch(`https://graph.facebook.com/me?fields=id,name,first_name,last_name,gender,picture.type(large),cover&access_token=${token}`)
@@ -40,17 +42,22 @@ export default class Login extends Component {
       })
   }
   render() {
-    console.log(this.state.userInfo?.picture.data.url, 'this.state.userInfo?.picture.data.url')
     return (
       <View style={styles.Container}>
-        <Text>
-          Welcome Stranger!
-          </Text>
-        {/* 'https://graph.facebook.com/' + friend.id + '/picture?type=large' */}
         {this.state.userInfo?.picture.data.url ?
-          <Image style={{ height: 100, width: 100, borderRadius: 50 }}
+          <Text style={styles.TextUser}>
+            Welcome {this.state.userInfo.name} !
+          </Text>
+          :
+          <Text style={styles.TextUser}>
+            Welcome Stranger!
+          </Text>}
+
+        {this.state.userInfo?.picture.data.url ?
+          <Image style={styles.ImageUser}
             source={{ uri: this.state.userInfo?.picture.data.url }}
-          /> : <Text>cosilamlam</Text>
+          /> : <Image style={styles.ImageUser}
+            source={require('../images/user.png')} />
         }
         <Text>
           Please log in to continue
@@ -58,7 +65,23 @@ export default class Login extends Component {
         <Text>
           to the awesomness
           </Text>
+        {/* <TouchableOpacity
+          style={styles.LoginButton}
+        // onPress={this.handleFacebookLogin}
+        // title="Continue with fb"
+        >
+          <Text style={styles.TextBotton}>Press Here</Text>
+        </TouchableOpacity> */}
+        {/* <Button
+          icon={<Icon name="facebook-box" size={32} color="white" />}
+          buttonStyle={styles.LandingButtonFacebook}
+          title="continue with Facebook"
+          titleStyle={styles.LandingBtnText}
+          type="solid"
+          onPress={() => loginWithFacebook()}
+        /> */}
         <LoginButton
+          style={styles.LoginButton}
           publishPermissions={['publish_actions']}
           readPermissions={['public_profile']}
           onLoginFinished={
@@ -89,16 +112,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  sectionTitle: {
+  TextUser: {
     fontSize: 24,
     fontWeight: '600',
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  ImageUser: {
+    height: 100,
+    width: 100,
+    borderRadius: 50,
+    margin: 30
   },
-  highlight: {
-    fontWeight: '700',
+  LoginButton: {
+    position: 'absolute',
+    top: 650,
+    right: 0,
+    width: '45%',
+    height: 30,
+    margin: 20,
   },
+  TextBotton: {
+    backgroundColor: '#4267B2',
+
+  }
 });

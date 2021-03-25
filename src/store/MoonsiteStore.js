@@ -4,7 +4,7 @@ class MoonsiteStore {
 
   // @persist('object') @observable userDate = null
 
-  //@observable Token = '';
+  // @observable Token = '';
   // @computed
   // get getUser() {
   //   return this.userData
