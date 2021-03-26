@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { Text, View, StyleSheet, Image, Button, TouchableOpacity } from 'react-native'
 import { LoginButton, AccessToken, LoginManager } from 'react-native-fbsdk';
-import MoonsiteStore from '../store/MoonsiteStore'
+import MoonsiteStore from '../Store/MoonsiteStore'
 import { observer, inject } from 'mobx-react'
 import AsyncStorage from '@react-native-community/async-storage';
 import { create } from 'mobx-persist';
+import { Api } from '../Components/Api'
 
 // const hydrate = create({
 //   storage: AsyncStorage,
@@ -41,6 +42,11 @@ export default class Login extends Component {
         alert('ERROR GETTING DATA FROM FACEBOOK')
       })
   }
+  Movies = async () => {
+    const res = await Api();
+    console.log(res, 'Movies')
+    return res;
+  }
   render() {
     return (
       <View style={styles.Container}>
@@ -65,13 +71,13 @@ export default class Login extends Component {
         <Text>
           to the awesomness
           </Text>
-        {/* <TouchableOpacity
-          style={styles.LoginButton}
-        // onPress={this.handleFacebookLogin}
+        <TouchableOpacity
+          //style={styles.LoginButton}
+          onPress={this.Movies()}
         // title="Continue with fb"
         >
-          <Text style={styles.TextBotton}>Press Here</Text>
-        </TouchableOpacity> */}
+          <Text style={styles.TextBotton}>Movies</Text>
+        </TouchableOpacity>
         {/* <Button
           icon={<Icon name="facebook-box" size={32} color="white" />}
           buttonStyle={styles.LandingButtonFacebook}
@@ -132,6 +138,6 @@ const styles = StyleSheet.create({
   },
   TextBotton: {
     backgroundColor: '#4267B2',
-
+    margin: 20,
   }
 });
