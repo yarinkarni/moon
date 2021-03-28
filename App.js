@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'mobx-react'
 import Login from './src/Screens/Login'
-import MoonsiteStore from './src/Store/MoonsiteStore'
+import MoonsiteStore from './src/Store/MovieStore'
 class App extends React.Component {
   render() {
     return (
