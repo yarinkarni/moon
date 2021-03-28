@@ -64,7 +64,9 @@ export default class Login extends Component {
       if (getMovies) {
         return (
           <ListItem itemDivider key={index}>
-            <TouchableOpacity onPress={() => this.toggleModal()}>
+            <TouchableOpacity onPress={() => console.log(this, 'props')}
+            //onPress={() => this.toggleModal()}
+            >
               <Text>{item}</Text>
             </TouchableOpacity>
           </ListItem >

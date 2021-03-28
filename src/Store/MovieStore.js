@@ -6,6 +6,13 @@ class MoonsiteStore {
 
   @observable Token = '';
   @observable Movies = [];
+  @observable MovieDetails = [];
+
+
+  @computed
+  get getMovieDetails() {
+    return this.MovieDetails
+  }
   @computed
   get getMovies() {
     return this.Movies
@@ -17,6 +24,14 @@ class MoonsiteStore {
   @computed
   get getUser() {
     return this.user
+  }
+
+
+
+
+  @action
+  setMovieDetails(MovieDetails) {
+    this.MovieDetails = MovieDetails
   }
   @action
   setMovies(Movies) {
