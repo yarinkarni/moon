@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Image, TouchableOpacity, InteractionManager } from 'react-native'
+import { View, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import { LoginButton, AccessToken, LoginManager } from 'react-native-fbsdk';
 import MovieStore from '../Store/MovieStore'
 import { observer, inject } from 'mobx-react'
@@ -37,10 +37,8 @@ export default class Login extends Component {
     await fetch(`https://graph.facebook.com/me?fields=id,name,first_name,last_name,gender,picture.type(large),cover&access_token=${token}`)
       .then((response) => response.json())
       .then((json) => {
-        InteractionManager.runAfterInteractions(() => {
-          MovieStore.setUser(json)
-          this.setState({ userInfo: json })
-        })
+        MovieStore.setUser(json)
+        this.setState({ userInfo: json })
       })
       .catch(() => {
         console.log('ERROR GETTING DATA FROM FACEBOOK')
