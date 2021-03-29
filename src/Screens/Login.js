@@ -1,73 +1,69 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, Image, TouchableOpacity, InteractionManager } from 'react-native'
 import { LoginButton, AccessToken, LoginManager } from 'react-native-fbsdk';
-import MoonsiteStore from '../Store/MovieStore'
+import MovieStore from '../Store/MovieStore'
 import { observer, inject } from 'mobx-react'
 import AsyncStorage from '@react-native-community/async-storage';
 import { create } from 'mobx-persist';
 import { Api } from '../Components/Api'
-import Modal from 'react-native-modal';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import { Container, Header, Content, List, ListItem, Thumbnail, Text, Left, Body, Right, Button } from 'native-base';
 
 
+let url = 'https://image.tmdb.org/t/p/w500'
 
 const hydrate = create({
   storage: AsyncStorage,
 });
 
 const GetHydrate = async () => {
-  await hydrate('userData', MoonsiteStore).then(() =>
+  await hydrate('userData', MovieStore).then(() =>
     console.log('Get data from store'),
   );
 }
-componentDidMount = async () => {
-  await GetHydrate()
-}
-@inject("MoonsiteStore")
+@inject("MovieStore")
 @observer
 export default class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
       userInfo: null,
-      isModalVisible: false,
     };
   }
   componentDidMount = async () => {
     await GetHydrate()
   }
-  initUser = (token) => {
-    const { MoonsiteStore } = this.props
-    fetch(`https://graph.facebook.com/me?fields=id,name,first_name,last_name,gender,picture.type(large),cover&access_token=${token}`)
+  initUser = async (token) => {
+    const { MovieStore } = this.props
+    await fetch(`https://graph.facebook.com/me?fields=id,name,first_name,last_name,gender,picture.type(large),cover&access_token=${token}`)
       .then((response) => response.json())
       .then((json) => {
-        this.setState({ userInfo: json })
-        MoonsiteStore.setUser(json)
+        InteractionManager.runAfterInteractions(() => {
+          MovieStore.setUser(json)
+          this.setState({ userInfo: json })
+        })
       })
       .catch(() => {
         console.log('ERROR GETTING DATA FROM FACEBOOK')
       })
   }
   Movies = async () => {
-    const { MoonsiteStore } = this.props
+    const { MovieStore } = this.props
     const res = await Api();
-    console.log(res, 'Movies')
-    console.log(res.results.map(e => e.title), 'title')
-    MoonsiteStore.setMovies(res.results.map(e => e.title), 'title')
-    console.log(MoonsiteStore.getMovies, 'getMovies')
+    MovieStore.setMovies(res.results)
     return res;
   }
   ListMovies = () => {
-    const { getMovies } = this.props.MoonsiteStore
+    const { getMovies } = this.props.MovieStore
+    const { navigation } = this.props;
     return getMovies.map((item, index) => {
       if (getMovies) {
         return (
           <ListItem itemDivider key={index}>
-            <TouchableOpacity onPress={() => console.log(this, 'props')}
-            //onPress={() => this.toggleModal()}
+            <TouchableOpacity style={{ alignItems: 'center', width: '100%' }} onPress={() => navigation.navigate('Movie', { item })}
             >
-              <Text>{item}</Text>
+              <Text>{item.title}</Text>
+              <Image style={{ height: 100, width: 180, marginTop: 8 }} source={{ uri: url + item.poster_path }} />
+              <View style={{ borderBottomWidth: 1, borderBottomColor: 'gray', paddingVertical: 10, width: '100%' }} />
             </TouchableOpacity>
           </ListItem >
         )
@@ -75,26 +71,22 @@ export default class Login extends Component {
     }
     )
   }
-  toggleModal = (index) => {
-    const { isModalVisible } = this.state
-    this.setState({ isModalVisible: !isModalVisible, index });
-  };
+
   render() {
-    const { MoonsiteStore } = this.props
-    const { isModalVisible } = this.state
+    const { MovieStore } = this.props
     return (
       <View style={styles.Container}>
-        {this.state.userInfo?.picture.data.url ?
+        {MovieStore.User?.picture.data.url ?
           <Text style={styles.TextUser}>
-            Welcome {this.state.userInfo.name} !
+            Welcome {MovieStore.User.name} !
           </Text>
           :
           <Text style={styles.TextUser}>
             Welcome Stranger!
           </Text>}
-        {this.state.userInfo?.picture.data.url ?
+        {MovieStore.User?.picture.data.url ?
           <Image style={styles.ImageUser}
-            source={{ uri: this.state.userInfo?.picture.data.url }}
+            source={{ uri: MovieStore.User?.picture.data.url }}
           /> : <Image style={styles.ImageUser}
             source={require('../images/user.png')} />
         }
@@ -104,21 +96,22 @@ export default class Login extends Component {
         <Text>
           to the awesomness
           </Text>
-        {this.state.userInfo?.picture.data.url ?
-          <TouchableOpacity
-            onPress={this.Movies}>
-            <Text style={styles.TextBotton}>Movies</Text>
-          </TouchableOpacity>
-          : <Text />}
-
-        <Container >
-          <Content>
-            <List style={styles.ListMovies}>
-              {this.ListMovies()}
-            </List>
-          </Content>
-        </Container>
-
+        {MovieStore.User ?
+          <View style={{ width: 250, alignItems: 'center' }}>
+            <TouchableOpacity
+              onPress={this.Movies}>
+              <Text style={styles.TextBotton}>Movies</Text>
+            </TouchableOpacity>
+            <View style={{ height: 250 }}>
+              <Container >
+                <Content>
+                  <List>
+                    {this.ListMovies()}
+                  </List>
+                </Content>
+              </Container>
+            </View>
+          </View> : <View />}
         <LoginButton
           style={styles.LoginButton}
           publishPermissions={['publish_actions']}
@@ -130,35 +123,19 @@ export default class Login extends Component {
               } else if (result.isCancelled) {
                 console.log("login is cancelled.");
               } else {
-                console.log(result)
                 AccessToken.getCurrentAccessToken().then((data) => {
-                  console.log(data, "data")
                   const { accessToken } = data
                   this.initUser(accessToken)
                 })
               }
             }
           }
-          onLogoutFinished={() => console.log("logout.")} />
-        <View style={styles.Container}>
-          <Modal
-            animationType='fade'
-            transparent={true}
-            isVisible={isModalVisible}>
-            <View style={{ height: '10%', backgroundColor: 'rgba(100,200,200,0.6)', width: '100%' }}>
-              <Text>שם הסרט</Text>
-            </View>
-            <View style={{ backgroundColor: 'white', width: '100%', height: '85%', alignItems: 'center' }}>
-              {/* {this.ApprovalOfReports()} */}
-            </View>
-            <AntDesign
-              name="closecircle"
-              size={30}
-              style={styles.closecircle}
-              onPress={() => this.toggleModal()}
-            />
-          </Modal>
-        </View>
+          onLogoutFinished={() => {
+            console.log("logout."),
+              MovieStore.setUser(null),
+              this.setState({ userInfo: null })
+          }} />
+
       </View>
     )
   }
@@ -183,7 +160,7 @@ const styles = StyleSheet.create({
   },
   LoginButton: {
     position: 'absolute',
-    top: 650,
+    top: 600,
     right: 0,
     width: '45%',
     height: 30,
@@ -192,19 +169,5 @@ const styles = StyleSheet.create({
   TextBotton: {
     backgroundColor: '#4267B2',
     margin: 20,
-  },
-  ListMovies: {
-    // height: 700
-    //width: '100%',
-
-
-  },
-  closecircle: {
-
-    position: 'absolute',
-    margin: 16,
-    //top: 4,
-    right: 0,
-    bottom: 0,
   },
 });
