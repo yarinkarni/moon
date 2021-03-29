@@ -96,10 +96,12 @@ export default class Login extends Component {
           </Text>
         {MovieStore.User ?
           <View style={{ width: 250, alignItems: 'center' }}>
-            <TouchableOpacity
-              onPress={this.Movies}>
-              <Text style={styles.TextBotton}>Movies</Text>
-            </TouchableOpacity>
+            {MovieStore.getMovies.length == 0 &&
+              <TouchableOpacity
+                onPress={this.Movies}>
+                <Text style={styles.TextBotton}>Movies</Text>
+              </TouchableOpacity>
+            }
             <View style={{ height: 250 }}>
               <Container >
                 <Content>
@@ -159,7 +161,6 @@ const styles = StyleSheet.create({
   LoginButton: {
     position: 'absolute',
     top: 600,
-    right: 0,
     width: '45%',
     height: 30,
     margin: 20,
@@ -167,5 +168,10 @@ const styles = StyleSheet.create({
   TextBotton: {
     backgroundColor: '#4267B2',
     margin: 20,
+    borderRadius: 20,
+    padding: 10,
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
   },
 });
