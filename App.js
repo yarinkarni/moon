@@ -6,61 +6,48 @@ import Login from './src/Screens/Login'
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { YellowBox } from "react-native";
+import { YellowBox, StyleSheet } from "react-native";
 YellowBox.ignoreWarnings([""]);
 class App extends React.Component {
   render() {
     return (
       <Provider MovieStore={MovieStore}>
-        <App2 />
+        <Screens />
       </Provider>
     );
   }
 }
 export default App;
 
-
-
 const Stack = createStackNavigator();
-const titleStyle = {
-  title: 'Movies',
-  headerStyle: {
-    backgroundColor: '#FFFFFF',
-  },
-  headerTintColor: 'black',
-  headerTitleStyle: {
-    width: '80%',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  }
-};
-const App2 = () => {
+const Screens = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={Login} options={{
-          title: titleStyle.title,
-          headerStyle: titleStyle.headerStyle,
-          headerTintColor: titleStyle.headerTintColor,
-          headerTitleStyle: {
-            width: '100%',
-            fontWeight: 'bold',
-            textAlign: 'center',
-            fontSize: 20
-          }
+          title: 'Movies',
+          headerStyle: styles.headerStyle,
+          headerTintColor: 'black',
+          headerTitleStyle: styles.headerTitleStyle
         }} />
         <Stack.Screen name="Movie" component={Movie} options={{
-          title: titleStyle.title,
-          headerStyle: titleStyle.headerStyle,
-          headerTintColor: titleStyle.headerTintColor,
-          headerTitleStyle: {
-            width: '80%',
-            fontWeight: 'bold',
-            textAlign: 'center',
-            fontSize: 20
-          }
+          title: 'Movies',
+          headerStyle: styles.headerStyle,
+          headerTintColor: 'black',
+          headerTitleStyle: styles.headerTitleStyle
         }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+const styles = StyleSheet.create({
+  headerStyle: {
+    backgroundColor: '#FFFFFF',
+  },
+  headerTitleStyle: {
+    width: '100%',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 20
+  },
+});

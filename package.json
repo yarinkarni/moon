@@ -13,12 +13,12 @@
     "@react-native-community/async-storage": "^1.12.1",
     "@react-navigation/native": "^5.9.3",
     "@react-navigation/stack": "^5.14.3",
-    "mobx": "^5.15.7",
+    "mobx": "^6.1.8",
     "mobx-persist": "^0.4.1",
-    "mobx-react": "^6.3.1",
+    "mobx-react": "^7.1.0",
     "native-base": "^2.15.2",
-    "react": "17.0.1",
-    "react-native": "0.62.2",
+    "react": "^17.0.2",
+    "react-native": "^0.64.0",
     "react-native-cards": "^1.1.4",
     "react-native-fbsdk": "^3.0.0",
     "react-native-gesture-handler": "^1.10.3",
@@ -28,16 +28,16 @@
     "react-native-vector-icons": "^8.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.3",
+    "@babel/core": "^7.13.14",
     "@babel/plugin-proposal-decorators": "^7.13.5",
-    "@babel/runtime": "^7.12.5",
-    "@react-native-community/eslint-config": "^0.0.5",
-    "babel-jest": "^24.9.0",
-    "eslint": "^6.5.1",
-    "jest": "^24.9.0",
-    "metro-react-native-babel-preset": "^0.58.0",
+    "@babel/runtime": "^7.13.10",
+    "@react-native-community/eslint-config": "^2.0.0",
+    "babel-jest": "^26.6.3",
+    "eslint": "^7.23.0",
+    "jest": "^26.6.3",
+    "metro-react-native-babel-preset": "^0.65.2",
     "path": "^0.12.7",
-    "react-test-renderer": "16.11.0"
+    "react-test-renderer": "17.0.2"
   },
   "jest": {
     "preset": "react-native"

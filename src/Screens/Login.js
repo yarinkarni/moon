@@ -48,6 +48,7 @@ export default class Login extends Component {
     const { MovieStore } = this.props
     const res = await Api();
     MovieStore.setMovies(res.results)
+    this.setState({})
     return res;
   }
   ListMovies = () => {
