@@ -1,32 +1,38 @@
 import React, { Component } from 'react'
 import { View, StyleSheet, ScrollView } from 'react-native'
-import { observer, inject } from 'mobx-react'
+import { observer, inject, Observer } from 'mobx-react'
 import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-cards';
 import Modal from 'react-native-modal';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { Container, Content, List, ListItem, Text } from 'native-base';
+import MovieStore from '../Store/MovieStore'
 
 
 
 let url = 'https://image.tmdb.org/t/p/w500'
-@inject("MovieStore")
+@inject('MovieStore')
 @observer
 export default class Movie extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isModalVisible: false,
+      FavoritesMovies: []
     }
   }
+
   AddFavoritesMovies = () => {
     const { item } = this.props.route.params
-    const { MovieStore } = this.props
-    MovieStore.setFavoritesMovies([...MovieStore.FavoritesMovies, item])
+    const { getFavoritesMovies } = this.props.MovieStore
+    console.log(this.props.MovieStore, 'this.props.MovieStore')
+    MovieStore.setFavoritesMovies([...getFavoritesMovies, item])
+    this.setState({ FavoritesMovies: MovieStore.getFavoritesMovies })
   }
   RemoveFavoritesMovies = () => {
     const { item } = this.props.route.params
-    const { MovieStore } = this.props
-    MovieStore.setFavoritesMovies(MovieStore.getFavoritesMovies.filter((e) => e.id != item.id))
+    const { getFavoritesMovies } = this.props.MovieStore
+    MovieStore.setFavoritesMovies(getFavoritesMovies.filter((e) => e.id != item.id))
+    this.setState({ FavoritesMovies: MovieStore.getFavoritesMovies })
   }
   toggleModal = (index) => {
     const { isModalVisible } = this.state
@@ -37,11 +43,10 @@ export default class Movie extends Component {
     return getFavoritesMovies.map((item, index) => {
       return (
         <ListItem itemDivider key={index} >
-          <Text style={{ width: '100%', textAlign: 'center' }}>{item.title}</Text>
+          <Text style={styles.txtList}>{item.title}</Text>
         </ListItem >
       )
-    }
-    )
+    })
   }
   FavoritesModal = () => {
     return (
@@ -54,12 +59,12 @@ export default class Movie extends Component {
   }
   render() {
     const { item } = this.props.route.params
-    const { MovieStore } = this.props
-    const { isModalVisible, getFavoritesMovies } = this.state
+    const { getFavoritesMovies } = this.props.MovieStore
+    const { isModalVisible } = this.state
     return (
       <View style={styles.Container}>
         <ScrollView>
-          <Card style={{ color: 'red' }}>
+          <Card >
             <CardImage
               source={{ uri: url + item.poster_path }}
             />
@@ -70,16 +75,16 @@ export default class Movie extends Component {
               separator={true}
               inColumn={false}>
               <CardButton
-                onPress={MovieStore.getFavoritesMovies.find((e) => e.id == item.id) === undefined ? this.AddFavoritesMovies : this.RemoveFavoritesMovies}
-                title={MovieStore.getFavoritesMovies.find((e) => e.id == item.id) === undefined ? "Add" : "Remove"}
-                color={MovieStore.getFavoritesMovies.find((e) => e.id == item.id) === undefined ? "#FEB557" : "red"}
+                onPress={getFavoritesMovies.find((e) => e.id == item.id) === undefined ? this.AddFavoritesMovies : this.RemoveFavoritesMovies}
+                title={getFavoritesMovies.find((e) => e.id == item.id) === undefined ? "Add" : "Remove"}
+                color={getFavoritesMovies.find((e) => e.id == item.id) === undefined ? "#FEB557" : "red"}
               />
               <CardButton
                 onPress={() => this.toggleModal()}
                 title="Favorites"
                 color="black"
               />
-              <Text style={{ textAlign: 'center', fontWeight: 'bold', marginHorizontal: 10, color: 'green' }}>{MovieStore.getFavoritesMovies.length}</Text>
+              <Text style={styles.numberFavorites}>{getFavoritesMovies.length}</Text>
             </CardAction>
           </Card>
         </ScrollView>
@@ -133,5 +138,15 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '85%',
     alignItems: 'center'
+  },
+  txtList: {
+    width: '100%',
+    textAlign: 'center'
+  },
+  numberFavorites: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginHorizontal: 10,
+    color: 'green'
   }
 })

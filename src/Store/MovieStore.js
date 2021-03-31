@@ -3,23 +3,23 @@ import { persist, create } from 'mobx-persist';
 class MovieStore {
 
   @persist('object') @observable user = null
-  @persist('object') @observable FavoritesMovies = []
+  @persist('object') @observable favoritesMovies = []
 
-  @observable Token = '';
-  @observable Movies = [];
-  @observable MovieDetails = [];
+  @observable movies = [];
+  @observable movieDetails = [];
+  
 
   @computed
   get getFavoritesMovies() {
-    return this.FavoritesMovies
+    return this.favoritesMovies
   }
   @computed
   get getMovieDetails() {
-    return this.MovieDetails
+    return this.movieDetails
   }
   @computed
   get getMovies() {
-    return this.Movies
+    return this.movies
   }
   @computed
   get getUser() {
@@ -28,21 +28,21 @@ class MovieStore {
 
 
 
-  @action
-  setFavoritesMovies(FavoritesMovies) {
-    this.FavoritesMovies = FavoritesMovies
+  @action.bound
+  setFavoritesMovies(favoritesMovies) {
+    this.favoritesMovies = favoritesMovies
   }
   @action
-  setMovieDetails(MovieDetails) {
-    this.MovieDetails = MovieDetails
+  setMovieDetails(movieDetails) {
+    this.movieDetails = movieDetails
   }
   @action
-  setMovies(Movies) {
-    this.Movies = Movies
+  setMovies(movies) {
+    this.movies = movies
   }
   @action
   setUser(data) {
-    this.User = data
+    this.user = data
   }
 
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'mobx-react'
 import MovieStore from './src/Store/MovieStore'
 import Movie from './src/Screens/Movie'
-import Login from './src/Screens/Login'
+import HomePage from './src/Screens/HomePage'
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -23,8 +23,8 @@ const Stack = createStackNavigator();
 const Screens = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={Login} options={{
+      <Stack.Navigator initialRouteName="HomePage">
+        <Stack.Screen name="HomePage" component={HomePage} options={{
           title: 'Movies',
           headerStyle: styles.headerStyle,
           headerTintColor: 'black',
