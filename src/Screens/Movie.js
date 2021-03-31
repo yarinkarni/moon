@@ -24,7 +24,6 @@ export default class Movie extends Component {
   AddFavoritesMovies = () => {
     const { item } = this.props.route.params
     const { getFavoritesMovies } = this.props.MovieStore
-    console.log(this.props.MovieStore, 'this.props.MovieStore')
     MovieStore.setFavoritesMovies([...getFavoritesMovies, item])
     this.setState({ FavoritesMovies: MovieStore.getFavoritesMovies })
   }
