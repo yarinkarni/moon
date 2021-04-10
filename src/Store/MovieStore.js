@@ -28,7 +28,7 @@ class MovieStore {
 
 
 
-  @action.bound
+  @action
   setFavoritesMovies(favoritesMovies) {
     this.favoritesMovies = favoritesMovies
   }
